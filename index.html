@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Termometal - Prodaja obojenih metala</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        Poručite telefonom: <a href="tel:+381622271885">+381 62 227 188</a>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo-container" onclick="showPage('home')">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" alt="Termometal Logo" class="logo-img" style="display:none;">
+                <span class="logo-text">Termometal</span>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleMenu()">☰</button>
+            <nav id="mainNav">
+                <ul>
+                    <li><a href="#" onclick="showPage('home'); return false;">Početna</a></li>
+                    <li class="dropdown">
+                        <a href="#" onclick="return false;">Metali</a>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="showProduct('kalaj'); return false;">Kalaj</a>
+                            <a href="#" onclick="showProduct('olovo'); return false;">Olovo</a>
+                            <a href="#" onclick="showProduct('cink'); return false;">Cink</a>
+                            <a href="#" onclick="showProduct('nikl'); return false;">Nikl</a>
+                        </div>
+                    </li>
+                    <li><a href="#" onclick="showPage('about'); return false;">O nama</a></li>
+                    <li><a href="#" onclick="showPage('contact'); return false;">Kontakt</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Home Page -->
+    <div id="homePage" class="page-content active">
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Termometal</h1>
+                <p>Vaš pouzdan partner za nabavku kvalitetnih obojenih metala</p>
+                <p class="hero-subtitle">Kalaj • Olovo • Cink • Nikl</p>
+            </div>
+        </section>
+
+        <div class="container">
+            <div class="intro">
+                <h2>Profesionalna trgovina metalima</h2>
+                <p>Sa dugogodišnjim iskustvom u trgovini obojenim metalima, nudimo visokokvalitetne proizvode za industrijsku upotrebu. Naš asortiman obuhvata kalaj, olovo, cink i nikl.</p>
+                <p>Garantujemo kvalitet svih proizvoda uz kompletnu dokumentaciju i sertifikate o hemijskom sastavu.</p>
+            </div>
+
+            <section class="products-section">
+                <h2>Naši proizvodi</h2>
+                <div class="products-grid">
+                    <div class="product-card" onclick="showProduct('kalaj')">
+                        <div class="product-header">
+                            <h3>Kalaj</h3>
+                        </div>
+                        <div class="product-info">
+                            <p>Visokokvalitetni kalaj za industrijsku upotrebu</p>
+                            <span class="view-details">Pogledaj detalje →</span>
+                        </div>
+                    </div>
+
+                    <div class="product-card" onclick="showProduct('olovo')">
+                        <div class="product-header">
+                            <h3>Olovo</h3>
+                        </div>
+                        <div class="product-info">
+                            <p>Olovni proizvodi različitih dimenzija</p>
+                            <span class="view-details">Pogledaj detalje →</span>
+                        </div>
+                    </div>
+
+                    <div class="product-card" onclick="showProduct('cink')">
+                        <div class="product-header">
+                            <h3>Cink</h3>
+                        </div>
+                        <div class="product-info">
+                            <p>Cink</p>
+                            <span class="view-details">Pogledaj detalje →</span>
+                        </div>
+                    </div>
+
+                    <div class="product-card" onclick="showProduct('nikl')">
+                        <div class="product-header">
+                            <h3>Nikl</h3>
+                        </div>
+                        <div class="product-info">
+                            <p>Nikl proizvodi vrhunskog kvaliteta</p>
+                            <span class="view-details">Pogledaj detalje →</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="info-section">
+                <h3>Zašto izabrati Termometal?</h3>
+                <ul>
+                    <li><strong>Sertifikovan kvalitet:</strong> Svi proizvodi dolaze sa sertifikatom o kvalitetu i hemijskom sastavu</li>
+                    <li><strong>Fleksibilnost:</strong> Mogućnost naručivanja po meri i željenim količinama</li>
+                    <li><strong>Dostava:</strong> Za veće količine obezbeđujemo dostavu</li>
+                    <li><strong>Stručnost:</strong> Tim stručnjaka sa višegodišnjim iskustvom</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Detail Page -->
+    <div id="productPage" class="page-content">
+        <div class="container">
+            <div class="product-detail">
+                <button class="back-btn" onclick="showPage('home')">← Nazad na početnu</button>
+                
+                <div class="product-detail-header">
+                    <h1 id="productTitle"></h1>
+                </div>
+
+                <div class="product-detail-content">
+                    <div class="product-description">
+                        <h3>Opis proizvoda</h3>
+                        <p id="productDescription"></p>
+                    </div>
+
+                    <div class="product-types">
+                        <h3>Dostupni oblici</h3>
+                        <ul id="productTypes"></ul>
+                    </div>
+
+                    <div class="product-specs">
+                        <h3>Specifikacije</h3>
+                        <ul id="productSpecs"></ul>
+                    </div>
+
+                    <div class="order-info">
+                        <h3>Informacije o naručivanju</h3>
+                        <div class="info-box">
+                            <p>📧 Proizvode možete poručiti emailom ili telefonom</p>
+                            <p>🚚 Za veće količine moguća i dostava</p>
+                            <p>📜 Za sve proizvode posedujemo sertifikat o kvalitetu (hemijski sastav)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Page -->
+    <div id="aboutPage" class="page-content">
+        <div class="container">
+            <div class="about-content">
+                <h2>O nama</h2>
+                <p>Termometal je vodeća kompanija u trgovini obojenim metalima na srpskom tržištu. Sa dugogodišnjim iskustvom u industriji, specijalizovani smo za prodaju kvalitetnih metala kao što su kalaj, olovo, cink i nikl.</p>
+                
+                <p>Naša misija je da našim klijentima obezbedimo pristup vrhunskim metalnim materijalima po konkurentnim cenama, uz najviši nivo usluge i podrške. Razumemo potrebe naših kupaca i trudimo se da im omogućimo brzu i jednostavnu nabavku potrebnih materijala.</p>
+                
+                <h3>Šta nas izdvaja:</h3>
+                <ul class="about-list">
+                    <li>Bogat asortiman metala</li>
+                    <li>Sertifikati kvaliteta za sve proizvode</li>
+                    <li>Dostava za veće količine</li>
+                    <li>Stručno osoblje koje Vam je uvek na raspolaganju</li>
+                    <li>Konkurentne cene i transparentno poslovanje</li>
+                </ul>
+
+                <p>Verujemo u dugoročne partnerske odnose sa našim klijentima i trudimo se da svojim kvalitetom i uslugom opravdamo Vaše poverenje.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Page -->
+    <div id="contactPage" class="page-content">
+        <div class="container">
+            <h2 class="page-title">Kontakt</h2>
+            <p class="page-subtitle">Za sve informacije, sugestije ili poručivanje kontaktirajte nas</p>
+            
+            <div class="contact-info">
+                <div class="contact-box">
+                    <h3>📞 Telefoni</h3>
+                    <p><a href="tel:+38162227188">+381 62 227 188</a></p>
+                     <p><a href="tel:+381694487524">+381 69 448 75 24</a></p>
+                </div>
+
+                <div class="contact-box">
+                    <h3>📧 E-Mail</h3>
+                    <p><a href="mailto:termometal03@gmail.com">termometal03@gmail.com</a></p>
+                </div>
+
+                <div class="contact-box">
+                    <h3>📍 Adresa</h3>
+                    <p>Užički put 288</p>
+                    <p>Uzići</p>
+                    <p>Srbija</p>
+                </div>
+
+                <div class="contact-box">
+                    <h3>🕐 Radno vreme</h3>
+                    <p>Ponedeljak-Petak: 7h - 15h</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Termometal</h4>
+                <p>Profesionalna trgovina obojenim metalima</p>
+            </div>
+
+            <div class="footer-section">
+                <h4>Proizvodi</h4>
+                <a href="#" onclick="showProduct('kalaj'); return false;">Kalaj</a>
+                <a href="#" onclick="showProduct('olovo'); return false;">Olovo</a>
+                <a href="#" onclick="showProduct('cink'); return false;">Cink</a>
+                <a href="#" onclick="showProduct('nikl'); return false;">Nikl</a>
+            </div>
+
+            <div class="footer-section">
+                <h4>Kontakt</h4>
+                <p>Telefon: +381 62 227 188</p>
+                <p>Email: termometal03@gmail.com</p>
+                <p>Užički put 288, Uzići</p>
+            </div>
+
+            <div class="footer-section">
+                <h4>Radno vreme</h4>
+                <p>Pon-Pet: 7h - 15h</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Termometal - Sva prava zadržana</p>
+        </div>
+    </footer>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
