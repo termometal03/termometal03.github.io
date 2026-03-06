@@ -1,0 +1,22 @@
+{
+  "name": "termometal-builder",
+  "version": "1.0.0",
+  "description": "Site generator za Termometal sajt",
+  "main": "index.html",
+  "window": {
+    "title": "Termometal Builder",
+    "width": 1000,
+    "height": 720,
+    "min_width": 800,
+    "min_height": 600,
+    "icon": "icon.png"
+  },
+  "scripts": {
+    "start": "nw ."
+  },
+  "nodejs": true,
+  "node-remote": "file://*",
+  "dependencies": {
+    "nw": "^0.109.0"
+  }
+}

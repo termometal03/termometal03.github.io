@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8">
+  <title>Termometal Builder</title>
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+    :root {
+      --bg:       #0f1117;
+      --surface:  #13151f;
+      --surface2: #1a1d27;
+      --border:   #2a2d3a;
+      --accent:   #0db7ea;
+      --accent-dim: #0db7ea22;
+      --text:     #e0e0e0;
+      --muted:    #888;
+      --dim:      #555;
+      --green:    #4ec94e;
+      --red:      #f47067;
+      --yellow:   #f0b429;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg); color: var(--text);
+      height: 100vh; display: flex; flex-direction: column; overflow: hidden;
+    }
+
+    .topbar {
+      background: var(--surface2); border-bottom: 1px solid var(--border);
+      padding: 0 20px; height: 48px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .logo { font-size: 16px; font-weight: 700; color: var(--accent); }
+    .badge { background: var(--accent-dim); color: var(--accent); font-size: 11px;
+             padding: 2px 8px; border-radius: 20px; border: 1px solid #0db7ea33; margin-left: 8px; }
+    .app-path { font-size: 11px; color: var(--dim); font-family: 'Consolas', monospace; }
+
+    .layout { display: flex; flex: 1; overflow: hidden; }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 210px; flex-shrink: 0;
+      background: var(--surface); border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; overflow-y: auto;
+    }
+    .sidebar-section { padding: 10px; border-bottom: 1px solid var(--border); }
+    .sidebar-label {
+      font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px;
+      color: var(--dim); margin-bottom: 6px; padding: 0 2px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-item {
+      display: flex; align-items: center; gap: 7px;
+      padding: 6px 8px; border-radius: 5px;
+      cursor: pointer; font-size: 12.5px; color: var(--muted);
+      transition: all 0.12s; user-select: none;
+      border: 1px solid transparent;
+    }
+    .nav-item:hover { background: var(--surface2); color: var(--text); }
+    .nav-item.active { background: var(--accent-dim); color: var(--accent); border-color: #0db7ea33; }
+    .nav-item .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--dim); flex-shrink: 0; }
+    .nav-item.active .dot { background: var(--accent); }
+    /* Delete button on metal nav items */
+    .nav-item .del-btn {
+      margin-left: auto; font-size: 12px; color: var(--dim);
+      padding: 1px 4px; border-radius: 3px; line-height: 1;
+      display: none;
+    }
+    .nav-item:hover .del-btn { display: block; }
+    .nav-item .del-btn:hover { color: var(--red); background: #f4706711; }
+
+    /* Add metal button */
+    .add-metal-btn {
+      display: flex; align-items: center; gap: 6px;
+      padding: 6px 8px; border-radius: 5px;
+      cursor: pointer; font-size: 12px; color: var(--dim);
+      border: 1px dashed var(--border);
+      transition: all 0.12s; margin-top: 4px;
+    }
+    .add-metal-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+
+    /* ── Editor ── */
+    .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .editor-header {
+      background: var(--surface2); border-bottom: 1px solid var(--border);
+      padding: 0 18px; height: 40px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .editor-title { font-size: 12.5px; color: var(--muted); font-weight: 500; }
+    .editor-hint  { font-size: 11px; color: var(--dim); }
+    .editor-wrap  { flex: 1; overflow: hidden; position: relative; }
+    textarea {
+      width: 100%; height: 100%;
+      background: var(--bg); color: #d4d4d4;
+      border: none; outline: none; resize: none;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 13px; line-height: 1.65; padding: 18px 20px; tab-size: 2;
+    }
+    .val-err {
+      position: absolute; bottom: 8px; left: 12px;
+      background: #2e1a1a; border: 1px solid #f4706755;
+      color: var(--red); font-size: 11px; padding: 4px 10px; border-radius: 4px; display: none;
+    }
+    .val-err.show { display: block; }
+
+    /* ── Right panel ── */
+    .panel {
+      width: 250px; flex-shrink: 0;
+      background: var(--surface); border-left: 1px solid var(--border);
+      display: flex; flex-direction: column; overflow: hidden;
+    }
+    .panel-block { padding: 12px 14px; border-bottom: 1px solid var(--border); }
+    .panel-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.9px; color: var(--dim); margin-bottom: 7px; }
+    .folder-path {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 5px; padding: 6px 9px;
+      font-size: 11px; color: var(--muted); word-break: break-all;
+      min-height: 32px; margin-bottom: 6px; font-family: 'Consolas', monospace;
+    }
+    .btn {
+      width: 100%; padding: 7px 12px; border-radius: 6px;
+      border: 1px solid var(--border); background: var(--surface2);
+      color: var(--muted); font-size: 12px; cursor: pointer;
+      transition: all 0.15s; text-align: center;
+    }
+    .btn:hover { border-color: #0db7ea44; color: var(--accent); }
+    .btn-gen {
+      margin: 12px 14px;
+      background: linear-gradient(135deg, #0db7ea, #0881b8);
+      color: white; border: none; padding: 11px;
+      border-radius: 7px; font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center; gap: 7px;
+    }
+    .btn-gen:hover { transform: translateY(-1px); box-shadow: 0 4px 18px #0db7ea44; }
+    .btn-gen:active { transform: none; }
+    .btn-gen:disabled { opacity: 0.45; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    .log-wrap { flex: 1; overflow-y: auto; padding: 8px 12px; }
+    .log-line { font-family: 'Consolas', monospace; font-size: 11.5px; padding: 2px 0; }
+    .log-line.ok   { color: var(--green); }
+    .log-line.err  { color: var(--red); }
+    .log-line.info { color: var(--dim); }
+    .log-line.done { color: var(--accent); font-weight: 600; margin-top: 4px; }
+
+    .stats-row { padding: 10px 14px; border-top: 1px solid var(--border); display: flex; gap: 10px; }
+    .stat { text-align: center; }
+    .stat-n { font-size: 18px; font-weight: 700; color: var(--accent); }
+    .stat-l { font-size: 10px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.7px; }
+
+    /* ── Modal: add metal ── */
+    .modal-bg {
+      position: fixed; inset: 0; background: #000000aa;
+      display: none; align-items: center; justify-content: center; z-index: 100;
+    }
+    .modal-bg.open { display: flex; }
+    .modal {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 24px; width: 400px;
+      box-shadow: 0 20px 60px #00000088;
+    }
+    .modal h3 { font-size: 15px; color: var(--text); margin-bottom: 18px; }
+    .field { margin-bottom: 14px; }
+    .field label { display: block; font-size: 11px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 5px; }
+    .field input, .field textarea {
+      width: 100%; background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 5px; padding: 8px 10px; color: var(--text);
+      font-size: 13px; font-family: 'Segoe UI', sans-serif; outline: none;
+      transition: border-color 0.15s;
+    }
+    .field input:focus, .field textarea:focus { border-color: var(--accent); }
+    .field textarea { resize: vertical; min-height: 60px; }
+    .field .hint { font-size: 11px; color: var(--dim); margin-top: 4px; }
+    .modal-btns { display: flex; gap: 10px; margin-top: 20px; }
+    .modal-btn {
+      flex: 1; padding: 9px; border-radius: 6px; font-size: 13px;
+      font-weight: 600; cursor: pointer; border: none; transition: all 0.15s;
+    }
+    .modal-btn.primary { background: var(--accent); color: #000; }
+    .modal-btn.primary:hover { background: #1ac8ff; }
+    .modal-btn.cancel { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
+    .modal-btn.cancel:hover { color: var(--text); }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed; bottom: 20px; right: 20px;
+      padding: 10px 16px; border-radius: 7px; font-size: 13px; font-weight: 600;
+      transform: translateY(60px); opacity: 0; transition: all 0.25s ease;
+      pointer-events: none; z-index: 999;
+    }
+    .toast.ok  { background: #1a2e1a; border: 1px solid #4ec94e55; color: var(--green); }
+    .toast.err { background: #2e1a1a; border: 1px solid #f4706755; color: var(--red); }
+    .toast.show { transform: translateY(0); opacity: 1; }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <div style="display:flex;align-items:center;">
+    <span class="logo">Termometal</span>
+    <span class="badge">Builder v2</span>
+  </div>
+  <span class="app-path" id="appPathDisplay"></span>
+</div>
+
+<div class="layout">
+
+  <!-- Sidebar — fully dynamic -->
+  <div class="sidebar" id="sidebar">
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Šabloni</div>
+      <div class="nav-item active" id="nav-navbar" onclick="open_('navbar')"><span class="dot"></span>navbar.html</div>
+      <div class="nav-item" id="nav-footer" onclick="open_('footer')"><span class="dot"></span>footer.html</div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">SEO — po stranici</div>
+      <div id="seo-nav-static">
+        <div class="nav-item" id="nav-seo-index"   onclick="open_('seo-index')"  ><span class="dot"></span>Početna</div>
+        <div class="nav-item" id="nav-seo-onama"   onclick="open_('seo-onama')"  ><span class="dot"></span>O nama</div>
+        <div class="nav-item" id="nav-seo-kontakt" onclick="open_('seo-kontakt')"><span class="dot"></span>Kontakt</div>
+      </div>
+      <div id="seo-nav-metals"></div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Sadržaj stranica</div>
+      <div class="nav-item" id="nav-body-index"   onclick="open_('body-index')"  ><span class="dot"></span>Početna HTML</div>
+      <div class="nav-item" id="nav-body-onama"   onclick="open_('body-onama')"  ><span class="dot"></span>O nama HTML</div>
+      <div class="nav-item" id="nav-body-kontakt" onclick="open_('body-kontakt')"><span class="dot"></span>Kontakt HTML</div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">
+        Metali
+        <span style="cursor:pointer;color:var(--accent);font-size:14px;font-weight:700;" title="Dodaj metal" onclick="openAddMetal()">＋</span>
+      </div>
+      <div id="metals-nav"></div>
+      <div class="add-metal-btn" onclick="openAddMetal()">＋ Dodaj metal</div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">CSS</div>
+      <div class="nav-item" id="nav-css" onclick="open_('css')"><span class="dot"></span>styles.css</div>
+    </div>
+
+  </div><!-- /sidebar -->
+
+  <!-- Editor -->
+  <div class="main">
+    <div class="editor-header">
+      <span class="editor-title" id="editorTitle">navbar.html</span>
+      <span class="editor-hint"  id="editorHint" >Edituj HTML navbara — primenjuje se na sve stranice</span>
+    </div>
+    <div class="editor-wrap">
+      <textarea id="ed" spellcheck="false"></textarea>
+      <div class="val-err" id="valErr"></div>
+    </div>
+  </div>
+
+  <!-- Right panel -->
+  <div class="panel">
+    <div class="panel-block">
+      <div class="panel-label">Izlazni folder</div>
+      <div class="folder-path" id="folderPath">Nije odabran</div>
+      <button class="btn" onclick="pickFolder()">📂 Odaberi folder...</button>
+    </div>
+    <button class="btn-gen" id="btnGen" onclick="generate()" disabled>⚡ Generiši sajt</button>
+    <div class="panel-block" style="padding-bottom:0;border-bottom:none;">
+      <div class="panel-label">Log</div>
+    </div>
+    <div class="log-wrap" id="logWrap"></div>
+    <div class="stats-row">
+      <div class="stat"><div class="stat-n" id="sFiles">0</div><div class="stat-l">Fajlova</div></div>
+      <div class="stat"><div class="stat-n" id="sBuilds">0</div><div class="stat-l">Buildova</div></div>
+      <div class="stat"><div class="stat-n" id="sTime">—</div><div class="stat-l">ms</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Add metal -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <h3>➕ Dodaj novi metal</h3>
+    <div class="field">
+      <label>Ključ (slug) *</label>
+      <input id="m-key" type="text" placeholder="npr: bakar" oninput="slugify(this)">
+      <div class="hint">Malo slova, bez razmaka. Koristiće se u URL-u: /metali/bakar.html</div>
+    </div>
+    <div class="field">
+      <label>Naziv *</label>
+      <input id="m-title" type="text" placeholder="npr: Bakar">
+    </div>
+    <div class="field">
+      <label>Opis</label>
+      <textarea id="m-desc" rows="3" placeholder="Kratki opis metala..."></textarea>
+    </div>
+    <div class="field">
+      <label>Dostupni oblici</label>
+      <input id="m-types" type="text" placeholder="Blok, Šipka, Žica  (razdvoji zarezom)">
+    </div>
+    <div class="field">
+      <label>Specifikacije</label>
+      <input id="m-specs" type="text" placeholder="Čistoća: 99.9%, Gustina: 8.96 g/cm³  (razdvoji zarezom)">
+    </div>
+    <div class="modal-btns">
+      <button class="modal-btn cancel" onclick="closeModal()">Otkaži</button>
+      <button class="modal-btn primary" onclick="confirmAddMetal()">Dodaj metal</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+
+const fs   = require('fs');
+const path = require('path');
+const { generateAll, loadConfig, saveConfig } = require('./builder.js');
+
+// ── Builder dir: try every reliable method, show result in UI ─────────────
+function resolveBuilderDir() {
+  // Method 1: require.resolve — works if Node resolved builder.js correctly
+  try {
+    const d = path.dirname(require.resolve('./builder.js'));
+    if (fs.existsSync(path.join(d, 'navbar.html'))) return d;
+  } catch(e) {}
+
+  // Method 2: nw.App.startPath
+  try {
+    if (typeof nw !== 'undefined' && nw.App && nw.App.startPath) {
+      const d = nw.App.startPath;
+      if (fs.existsSync(path.join(d, 'navbar.html'))) return d;
+    }
+  } catch(e) {}
+
+  // Method 3: process.cwd()
+  try {
+    const d = process.cwd();
+    if (fs.existsSync(path.join(d, 'navbar.html'))) return d;
+  } catch(e) {}
+
+  // Method 4: walk up from cwd until we find navbar.html
+  try {
+    let d = process.cwd();
+    for (let i = 0; i < 5; i++) {
+      if (fs.existsSync(path.join(d, 'navbar.html'))) return d;
+      d = path.dirname(d);
+    }
+  } catch(e) {}
+
+  // Fallback: return require.resolve result even if navbar not found there
+  try { return path.dirname(require.resolve('./builder.js')); } catch(e) {}
+  return process.cwd();
+}
+
+const BUILDER_DIR   = resolveBuilderDir();
+const NAVBAR_PATH   = path.join(BUILDER_DIR, 'navbar.html');
+const FOOTER_PATH   = path.join(BUILDER_DIR, 'footer.html');
+const CONFIG_PATH   = path.join(BUILDER_DIR, 'site.config.json');
+const CSS_PATH      = path.join(BUILDER_DIR, 'styles.css');
+const BODY_INDEX    = path.join(BUILDER_DIR, 'body-index.html');
+const BODY_ONAMA    = path.join(BUILDER_DIR, 'body-onama.html');
+const BODY_KONTAKT  = path.join(BUILDER_DIR, 'body-kontakt.html');
+
+// Show resolved paths in UI for debugging
+document.getElementById('appPathDisplay').textContent = BUILDER_DIR;
+document.getElementById('appPathDisplay').title =
+  'navbar: ' + NAVBAR_PATH + '\n' +
+  'footer: ' + FOOTER_PATH + '\n' +
+  'config: ' + CONFIG_PATH;
+
+// ── Read all files from builder folder ────────────────────────────────────
+function readFile(p, fallback) {
+  try { return fs.readFileSync(p, 'utf8'); } catch(e) { return fallback; }
+}
+
+let navbar     = readFile(NAVBAR_PATH, '');
+let footer     = readFile(FOOTER_PATH, '');
+let bodyIndex  = readFile(BODY_INDEX,  '');
+let bodyOnama  = readFile(BODY_ONAMA,  '');
+let bodyKontakt= readFile(BODY_KONTAKT,'');
+let cssContent = readFile(CSS_PATH,    '/* styles.css not found */');
+let cfg        = fs.existsSync(CONFIG_PATH) ? loadConfig(CONFIG_PATH)
+               : { siteUrl:'https://termometal03.com',
+                   pages:{ index:{file:'index.html',url:'/',title:'',description:'',priority:'1.0',changefreq:'monthly'},
+                           onama:{file:'o-nama.html',url:'/o-nama.html',title:'',description:'',priority:'0.6',changefreq:'yearly'},
+                           kontakt:{file:'kontakt.html',url:'/kontakt.html',title:'',description:'',priority:'0.7',changefreq:'yearly'} },
+                   metals:{} };
+
+let current  = '';
+let siteDir  = null;
+let builds   = 0;
+
+// ── Dynamic TABS ──────────────────────────────────────────────────────────
+function buildTabs() {
+  const tabs = {
+    navbar:        { title:'navbar.html',    hint:'HTML navbara — primenjuje se na sve stranice',  get:()=>navbar,      set:v=>{navbar=v;} },
+    footer:        { title:'footer.html',    hint:'HTML footera — primenjuje se na sve stranice',  get:()=>footer,      set:v=>{footer=v;} },
+    css:           { title:'styles.css',     hint:'CSS sajta — biće kopiran u izlazni folder',     get:()=>cssContent,  set:v=>{cssContent=v;} },
+    'seo-index':   { title:'SEO — Početna',  hint:'title, description za index.html',              get:()=>seoJson('index'),   set:v=>seoSet('index',v),   json:true },
+    'seo-onama':   { title:'SEO — O nama',   hint:'title, description za o-nama.html',             get:()=>seoJson('onama'),   set:v=>seoSet('onama',v),   json:true },
+    'seo-kontakt': { title:'SEO — Kontakt',  hint:'title, description za kontakt.html',            get:()=>seoJson('kontakt'),set:v=>seoSet('kontakt',v), json:true },
+    'body-index':  { title:'body-index.html',  hint:'Sadržaj index.html (između navbara i footera)',get:()=>bodyIndex,   set:v=>{bodyIndex=v;} },
+    'body-onama':  { title:'body-onama.html',  hint:'Sadržaj o-nama.html',                         get:()=>bodyOnama,   set:v=>{bodyOnama=v;} },
+    'body-kontakt':{ title:'body-kontakt.html',hint:'Sadržaj kontakt.html',                        get:()=>bodyKontakt, set:v=>{bodyKontakt=v;} },
+  };
+  for (const key of Object.keys(cfg.metals)) {
+    const t = cfg.metals[key].title;
+    tabs[`seo-${key}`]   = { title:`SEO — ${t}`,   hint:`title, description za metali/${key}.html`, get:()=>seoJson(key),   set:v=>seoSet(key,v),   json:true };
+    tabs[`metal-${key}`] = { title:`Metal — ${t}`, hint:`Podaci za ${t}`,                           get:()=>metalJson(key), set:v=>metalSet(key,v), json:true };
+  }
+  return tabs;
+}
+let TABS = buildTabs();
+
+// ── SEO / metal helpers ───────────────────────────────────────────────────
+function seoJson(key) {
+  const p = cfg.pages[key] || {title:'',description:'',priority:'0.8',changefreq:'monthly'};
+  return JSON.stringify({title:p.title,description:p.description,priority:p.priority,changefreq:p.changefreq},null,2);
+}
+function seoSet(key,v) { if(!cfg.pages[key])cfg.pages[key]={}; Object.assign(cfg.pages[key],JSON.parse(v)); }
+function metalJson(key) { return JSON.stringify(cfg.metals[key],null,2); }
+function metalSet(key,v) { cfg.metals[key]=JSON.parse(v); }
+
+// ── Sidebar ───────────────────────────────────────────────────────────────
+function renderMetalsSidebar() {
+  const nav    = document.getElementById('metals-nav');
+  const seoNav = document.getElementById('seo-nav-metals');
+  nav.innerHTML = ''; seoNav.innerHTML = '';
+  for (const key of Object.keys(cfg.metals)) {
+    const t = cfg.metals[key].title;
+    const d = document.createElement('div');
+    d.className = 'nav-item' + (current===`metal-${key}`?' active':'');
+    d.id = `nav-metal-${key}`;
+    d.innerHTML = `<span class="dot"></span><span style="flex:1" onclick="open_('metal-${key}')">${t}</span><span class="del-btn" onclick="deleteMetal('${key}')">✕</span>`;
+    nav.appendChild(d);
+    const s = document.createElement('div');
+    s.className = 'nav-item' + (current===`seo-${key}`?' active':'');
+    s.id = `nav-seo-${key}`; s.innerHTML = `<span class="dot"></span>${t}`;
+    s.onclick = ()=>open_(`seo-${key}`);
+    seoNav.appendChild(s);
+  }
+}
+
+// ── Open tab ──────────────────────────────────────────────────────────────
+function open_(key) {
+  saveCurrentTab();
+  current = key;
+  TABS = buildTabs();
+  const tab = TABS[key]; if(!tab) return;
+  document.getElementById('editorTitle').textContent = tab.title;
+  document.getElementById('editorHint').textContent  = tab.hint;
+  document.getElementById('ed').value = tab.get();
+  hideValErr();
+  document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
+  const el = document.getElementById('nav-'+key); if(el) el.classList.add('active');
+}
+
+function saveCurrentTab() {
+  const tab = TABS[current]; if(!tab) return;
+  const val = document.getElementById('ed').value;
+  if(tab.json) { try{tab.set(val);}catch(e){} } else { tab.set(val); }
+}
+
+document.getElementById('ed').addEventListener('input', () => {
+  const tab = TABS[current];
+  if(!tab||!tab.json){hideValErr();return;}
+  try{JSON.parse(document.getElementById('ed').value);hideValErr();}
+  catch(e){showValErr('JSON greška: '+e.message);}
+});
+function showValErr(msg){const e=document.getElementById('valErr');e.textContent=msg;e.classList.add('show');}
+function hideValErr(){document.getElementById('valErr').classList.remove('show');}
+
+// ── Output folder picker ──────────────────────────────────────────────────
+function pickFolder() {
+  const inp = document.createElement('input');
+  inp.setAttribute('nwdirectory',''); inp.type='file';
+  inp.addEventListener('change',()=>{ if(inp.value) setOutputFolder(inp.value); });
+  inp.click();
+}
+function setOutputFolder(dir) {
+  siteDir = dir;
+  document.getElementById('folderPath').textContent = dir;
+  document.getElementById('btnGen').disabled = false;
+  localStorage.setItem('tb-ui', JSON.stringify({siteDir:dir, builds}));
+}
+
+// ── Add / delete metal ────────────────────────────────────────────────────
+function openAddMetal() {
+  ['m-key','m-title','m-desc','m-types','m-specs'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('modalBg').classList.add('open');
+  document.getElementById('m-key').focus();
+}
+function closeModal(){ document.getElementById('modalBg').classList.remove('open'); }
+function slugify(input){
+  input.value=input.value.toLowerCase()
+    .replace(/š/g,'s').replace(/č/g,'c').replace(/ć/g,'c')
+    .replace(/ž/g,'z').replace(/đ/g,'dj').replace(/[^a-z0-9-]/g,'');
+}
+function confirmAddMetal(){
+  const key=document.getElementById('m-key').value.trim();
+  const title=document.getElementById('m-title').value.trim();
+  if(!key){document.getElementById('m-key').focus();return;}
+  if(!title){document.getElementById('m-title').focus();return;}
+  if(cfg.metals[key]){toast(`Metal "${key}" već postoji`,true);return;}
+  const types=document.getElementById('m-types').value.split(',').map(s=>s.trim()).filter(Boolean);
+  const specs=document.getElementById('m-specs').value.split(',').map(s=>s.trim()).filter(Boolean);
+  cfg.metals[key]={title,description:document.getElementById('m-desc').value.trim()||`${title} visoke čistoće.`,
+    types:types.length?types:['U bloku'],specs:specs.length?specs:['Sertifikat o hemijskom sastavu']};
+  cfg.pages[key]={file:`metali/${key}.html`,url:`/metali/${key}.html`,
+    title:`${title} - Termometal`,description:`${title} visoke čistoće sa sertifikatom.`,
+    priority:'0.8',changefreq:'monthly'};
+  TABS=buildTabs(); renderMetalsSidebar(); closeModal(); open_(`metal-${key}`);
+  toast(`✓ Metal "${title}" dodat`,false);
+}
+function deleteMetal(key){
+  const title=cfg.metals[key]?.title||key;
+  if(!confirm(`Obriši metal "${title}"?`)) return;
+  delete cfg.metals[key]; delete cfg.pages[key];
+  TABS=buildTabs(); renderMetalsSidebar();
+  if(current===`metal-${key}`||current===`seo-${key}`) open_('navbar');
+  toast(`Metal "${title}" obrisan`,false);
+}
+document.getElementById('modalBg').addEventListener('click',e=>{
+  if(e.target===document.getElementById('modalBg')) closeModal();
+});
+
+// ── Save all files back to builder folder ─────────────────────────────────
+function saveToBuilderFolder() {
+  fs.writeFileSync(NAVBAR_PATH,  navbar,      'utf8');
+  fs.writeFileSync(FOOTER_PATH,  footer,      'utf8');
+  fs.writeFileSync(BODY_INDEX,   bodyIndex,   'utf8');
+  fs.writeFileSync(BODY_ONAMA,   bodyOnama,   'utf8');
+  fs.writeFileSync(BODY_KONTAKT, bodyKontakt, 'utf8');
+  fs.writeFileSync(CSS_PATH,     cssContent,  'utf8');
+  saveConfig(CONFIG_PATH, cfg);
+}
+
+// ── Generate ──────────────────────────────────────────────────────────────
+function generate() {
+  if(!siteDir) return;
+  saveCurrentTab();
+  TABS=buildTabs();
+
+  for(const [key,tab] of Object.entries(TABS)){
+    if(!tab.json) continue;
+    try{JSON.parse(tab.get());}catch(e){toast(`✗ JSON greška u "${tab.title}"`,true);open_(key);return;}
+  }
+
+  try { saveToBuilderFolder(); }
+  catch(e) { toast('✗ Ne mogu da sačuvam fajlove: '+e.message,true); return; }
+
+  const logEl=document.getElementById('logWrap');
+  logEl.innerHTML='';
+  const btn=document.getElementById('btnGen');
+  btn.disabled=true; btn.textContent='⏳ Generisanje...';
+  const start=Date.now(); let n=0;
+
+  function addLog(msg,cls='ok'){
+    const el=document.createElement('div'); el.className='log-line '+cls; el.textContent=msg;
+    logEl.appendChild(el); logEl.scrollTop=logEl.scrollHeight; if(cls==='ok') n++;
+  }
+  addLog('Pokretanje...','info');
+
+  const genCfg = Object.assign({}, cfg, {
+    navbar, footer,
+    bodies: { index: bodyIndex, onama: bodyOnama, kontakt: bodyKontakt }
+  });
+
+  setTimeout(()=>{
+    const res = generateAll(siteDir, genCfg, msg=>addLog(msg));
+    try { fs.writeFileSync(path.join(siteDir,'styles.css'), cssContent,'utf8'); addLog('✓ styles.css'); }
+    catch(e){ addLog('✗ styles.css: '+e.message,'err'); }
+    const ms=Date.now()-start;
+    if(res.ok){
+      builds++;
+      addLog(`\n✓ Gotovo! ${n} fajlova za ${ms}ms`,'done');
+      document.getElementById('sFiles').textContent=n;
+      document.getElementById('sBuilds').textContent=builds;
+      document.getElementById('sTime').textContent=ms;
+      toast(`✓ ${n} fajlova generisano`,false);
+      localStorage.setItem('tb-ui',JSON.stringify({siteDir,builds}));
+    } else {
+      addLog('✗ '+res.error,'err'); toast('✗ Greška: '+res.error,true);
+    }
+    btn.disabled=false; btn.textContent='⚡ Generiši sajt';
+  },30);
+}
+
+// ── Toast ─────────────────────────────────────────────────────────────────
+function toast(msg,isErr){
+  const el=document.getElementById('toast'); el.textContent=msg;
+  el.className='toast '+(isErr?'err':'ok')+' show';
+  setTimeout(()=>el.className='toast '+(isErr?'err':'ok'),3200);
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────
+try {
+  const saved=JSON.parse(localStorage.getItem('tb-ui')||'{}');
+  if(saved.siteDir) setOutputFolder(saved.siteDir);
+  if(saved.builds)  { builds=saved.builds; document.getElementById('sBuilds').textContent=builds; }
+} catch(e){}
+
+renderMetalsSidebar();
+open_('navbar');
+</script>
+</body>
+</html>

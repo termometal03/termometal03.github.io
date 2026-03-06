@@ -1,0 +1,121 @@
+{
+  "siteUrl": "https://termometal03.com",
+  "pages": {
+    "index": {
+      "file": "index.html",
+      "url": "/",
+      "title": "Termometal - Prodaja obojenih metala",
+      "description": "Prodaja obojenih metala visoke čistoće. Kalaj, olovo, cink, nikl. Srbija.",
+      "priority": "1.0",
+      "changefreq": "monthly"
+    },
+    "onama": {
+      "file": "o-nama.html",
+      "url": "/o-nama.html",
+      "title": "O nama - Termometal",
+      "description": "Saznajte više o kompaniji Termometal - vašem pouzdanom partneru za obojene metale.",
+      "priority": "0.6",
+      "changefreq": "yearly"
+    },
+    "kontakt": {
+      "file": "kontakt.html",
+      "url": "/kontakt.html",
+      "title": "Kontakt - Termometal",
+      "description": "Kontaktirajte Termometal za narudžbine kalaja, olova, cinka i nikla.",
+      "priority": "0.7",
+      "changefreq": "yearly"
+    },
+    "kalaj": {
+      "file": "metali/kalaj.html",
+      "url": "/metali/kalaj.html",
+      "title": "Kalaj - Termometal",
+      "description": "Prodaja kalaja visoke čistoće 99.9%. Kalaj u bloku i prahu sa sertifikatom kvaliteta.",
+      "priority": "0.9",
+      "changefreq": "monthly"
+    },
+    "olovo": {
+      "file": "metali/olovo.html",
+      "url": "/metali/olovo.html",
+      "title": "Olovo - Termometal",
+      "description": "Prodaja olova u blokovima čistoće 99.9%. Sertifikat o hemijskom sastavu.",
+      "priority": "0.9",
+      "changefreq": "monthly"
+    },
+    "cink": {
+      "file": "metali/cink.html",
+      "url": "/metali/cink.html",
+      "title": "Cink - Termometal",
+      "description": "Prodaja cinka visoke čistoće. Blokovi i anode različitih dimenzija.",
+      "priority": "0.9",
+      "changefreq": "monthly"
+    },
+    "nikl": {
+      "file": "metali/nikl.html",
+      "url": "/metali/nikl.html",
+      "title": "Nikl - Termometal",
+      "description": "Prodaja nikla granule čistoće 99.6-99.98%. Vrhunski kvalitet sa dokumentacijom.",
+      "priority": "0.9",
+      "changefreq": "monthly"
+    }
+  },
+  "metals": {
+    "kalaj": {
+      "title": "Kalaj",
+      "description": "Kalaj je srebrnasto-beli metal koji se koristi u mnogim industrijskim proizvodima. Poznat po svojoj otpornosti na koroziju, niskoj temperaturi topljenja i odličnim zaštitnim svojstvima. Naš kalaj je visoke čistoće i dolazi sa sertifikatom o kvalitetu.",
+      "types": [
+        "Kalaj u bloku",
+        "Kalaj u prahu"
+      ],
+      "specs": [
+        "Čistoća: 99.9% i više",
+        "Temperatura topljenja: 231.9°C",
+        "Gustina: 7.31 g/cm³",
+        "Sertifikat o hemijskom sastavu",
+        "Mogućnost izrade po meri"
+      ]
+    },
+    "olovo": {
+      "title": "Olovo",
+      "description": "Olovo je mek, teški metal plavičasto-sive boje. Koristi se kao zaštita od zračenja, u akumulatorima, za izolaciju zvuka i vibracija, kao i u građevinarstvu. Nudimo olovo u bloku sa kompletnom dokumentacijom o kvalitetu.",
+      "types": [
+        "Olovo u blokovima"
+      ],
+      "specs": [
+        "Čistoća: 99.9% i više",
+        "Temperatura topljenja: 327.5°C",
+        "Gustina: 11.34 g/cm³",
+        "Sertifikat o hemijskom sastavu"
+      ]
+    },
+    "cink": {
+      "title": "Cink",
+      "description": "Cink je plavičasto-beli metal koji se prvenstveno koristi za zaštitu čelika od korozije (pocinčavanje). Takođe se koristi u izradi legura, kao što su mesing i bronza. Nudimo cink visoke čistoće za različite industrijske primene.",
+      "types": [
+        "Blok",
+        "Anode 600mm x 100mm x 10mm",
+        "Anode 800mm x 100mm x 10mm",
+        "Anode 1200mm x 100mm x 10mm"
+      ],
+      "specs": [
+        "Čistoća: 98.5% - 99.9%",
+        "Temperatura topljenja: 419.5°C",
+        "Gustina: 7.14 g/cm³",
+        "Sertifikat o hemijskom sastavu"
+      ]
+    },
+    "nikl": {
+      "title": "Nikl",
+      "description": "Nikl je srebrnasto-beli metal poznat po svojoj otpornosti na koroziju i oksidaciju pri visokim temperaturama. Koristi se u proizvodnji nerđajućeg čelika, legura, galvanizaciji i kao katalizator u hemijskoj industriji.",
+      "types": [
+        "Nikl u granulama"
+      ],
+      "specs": [
+        "Čistoća: 99.6% - 99.98%",
+        "Temperatura topljenja: 1455°C",
+        "Gustina: 8.91 g/cm³",
+        "Sertifikat o hemijskom sastavu",
+        "Otporan na koroziju"
+      ]
+    }
+  }
+}
