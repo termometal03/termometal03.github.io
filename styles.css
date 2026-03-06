@@ -124,6 +124,7 @@ nav a:hover {
     color: white;
     padding: 100px 20px;
     text-align: center;
+    text-shadow: 0 0 10px black;
 }
 
 .hero-content h1 {
