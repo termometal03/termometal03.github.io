@@ -117,7 +117,7 @@ nav a:hover {
 
 /* Hero Section */
 .hero {
-    background-image: url("/slike/hero_2_pozadina.jpg");
+    background-image: url("/slike/hero_pozadina.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
