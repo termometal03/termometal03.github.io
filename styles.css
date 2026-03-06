@@ -117,7 +117,7 @@ nav a:hover {
 
 /* Hero Section */
 .hero {
-    background-image: url(https://media.istockphoto.com/id/1369010523/photo/roll-of-galvanized-steel-sheet-at-metalworking-factory.jpg?b=1&s=1024x1024&w=0&k=20&c=WKmiCYVWaIwUysI7BTZMSuPJMK7WvBxhaocJCF8RfPk=);
+    background-image: url("/slike/hero_2_pozadina.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
