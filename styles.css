@@ -117,7 +117,10 @@ nav a:hover {
 
 /* Hero Section */
 .hero {
-    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    background-image: url(https://media.istockphoto.com/id/1369010523/photo/roll-of-galvanized-steel-sheet-at-metalworking-factory.jpg?b=1&s=1024x1024&w=0&k=20&c=WKmiCYVWaIwUysI7BTZMSuPJMK7WvBxhaocJCF8RfPk=);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
     color: white;
     padding: 100px 20px;
     text-align: center;
