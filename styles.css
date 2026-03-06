@@ -642,3 +642,33 @@ footer {
         font-size: 32px;
     }
 }
+
+/* Multi-page: product card as link */
+.product-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.product-card-link .product-card {
+    height: 100%;
+}
+
+/* back-btn as anchor */
+a.back-btn {
+    display: inline-block;
+    background: #f5f5f5;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+    color: #333;
+    margin-bottom: 30px;
+    transition: background 0.3s;
+    text-decoration: none;
+}
+
+a.back-btn:hover {
+    background: #e0e0e0;
+}
