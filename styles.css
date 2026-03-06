@@ -8,7 +8,7 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
     color: #333;
-    background: #f5f5f5;
+    background: #e2e2e2;
 }
 
 /* Top Bar */
@@ -21,7 +21,7 @@ body {
 }
 
 .top-bar a {
-    color: #4CAF50;
+    color: #0db7ea;
     text-decoration: none;
     font-weight: bold;
 }
@@ -79,7 +79,7 @@ nav a {
 }
 
 nav a:hover {
-    color: #4CAF50;
+    color: #0db7ea;
 }
 
 .dropdown {
@@ -112,7 +112,7 @@ nav a:hover {
 
 .dropdown-content a:hover {
     background: #f8f8f8;
-    color: #4CAF50;
+    color: #0db7ea;
 }
 
 /* Hero Section */
@@ -208,11 +208,11 @@ nav a:hover {
 .product-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-    border-color: #4CAF50;
+    border-color: #0db7ea;
 }
 
 .product-header {
-    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    background: #1a1a1a;
     color: white;
     padding: 40px 20px;
     text-align: center;
@@ -234,7 +234,7 @@ nav a:hover {
 }
 
 .view-details {
-    color: #4CAF50;
+    color: #0db7ea;
     font-weight: 600;
     display: inline-block;
     margin-top: 10px;
@@ -244,7 +244,7 @@ nav a:hover {
 .info-section {
     background: white;
     padding: 50px;
-    border-left: 5px solid #4CAF50;
+    border-left: 5px solid #0db7ea;
     border-radius: 4px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
@@ -272,7 +272,7 @@ nav a:hover {
     content: "✓";
     position: absolute;
     left: 0;
-    color: #4CAF50;
+    color: #0db7ea;
     font-size: 20px;
     font-weight: bold;
 }
@@ -302,7 +302,7 @@ nav a:hover {
 }
 
 .product-detail-header {
-    border-bottom: 3px solid #4CAF50;
+    border-bottom: 3px solid #0db7ea;
     padding-bottom: 20px;
     margin-bottom: 40px;
 }
@@ -359,7 +359,7 @@ nav a:hover {
     content: "▸";
     position: absolute;
     left: 0;
-    color: #4CAF50;
+    color: #0db7ea;
     font-weight: bold;
 }
 
@@ -440,7 +440,7 @@ nav a:hover {
     content: "✓";
     position: absolute;
     left: 0;
-    color: #4CAF50;
+    color: #0db7ea;
     font-weight: bold;
     font-size: 18px;
 }
@@ -493,7 +493,7 @@ nav a:hover {
 }
 
 .contact-box a {
-    color: #4CAF50;
+    color: #0db7ea;
     text-decoration: none;
     font-weight: 500;
 }
@@ -519,7 +519,7 @@ footer {
 }
 
 .footer-section h4 {
-    color: #4CAF50;
+    color: #0db7ea;
     margin-bottom: 20px;
     font-size: 20px;
     font-weight: 600;
@@ -535,7 +535,7 @@ footer {
 }
 
 .footer-section a:hover {
-    color: #4CAF50;
+    color: #0db7ea;
 }
 
 .footer-bottom {
