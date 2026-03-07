@@ -220,6 +220,7 @@ nav a:hover {
     text-shadow: 1px 1px 9px #000000;
     background-repeat: no-repeat;
     background-size: cover;
+    background-position: center;
 }
 
 .product-header h3 {
@@ -672,3 +673,4 @@ a.back-btn {
 a.back-btn:hover {
     background: #e0e0e0;
 }
+
