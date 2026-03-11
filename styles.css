@@ -211,7 +211,7 @@ nav a:hover {
 }
 
 .product-header {
-    background: #014374;
+    background: #989898;
     color: white;
     padding: 40px 20px;
     text-align: center;
@@ -673,4 +673,5 @@ a.back-btn {
 a.back-btn:hover {
     background: #e0e0e0;
 }
+
 
